@@ -7,7 +7,7 @@ md`# Zoomable Circle Packing
 
 Click to zoom in or out.`
 )});
-  main.variable(observer("chart")).define("chart", ["pack","data","d3","width","height","color"], function(pack,data,d3,width,height,color)
+  main.variable(observer("chart")).define("chart", ["pack","data","d3","width","height","color", "words"], function(pack,data,d3,width,height,color, words)
 {
   const root = pack(data);
   let focus = root;
@@ -107,4 +107,13 @@ d3.scaleLinear()
 require("d3@6")
 )});
   return main;
+}
+
+
+main.variable(observer("words")).define("words", function(){return(
+function(text) {
+const words = text.split(/\s+/g); // To hyphenate: /\s+|(?<=-)/
+if (!words[words.length - 1]) words.pop();
+if (!words[0]) words.shift();
+return words;
 }
