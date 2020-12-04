@@ -106,14 +106,13 @@ d3.scaleLinear()
   main.variable(observer("d3")).define("d3", ["require"], function(require){return(
 require("d3@6")
 )});
-  return main;
-}
-
-
-main.variable(observer("words")).define("words", function(){return(
+  main.variable(observer("words")).define("words", function(){return(
 function(text) {
 const words = text.split(/\s+/g); // To hyphenate: /\s+|(?<=-)/
 if (!words[words.length - 1]) words.pop();
 if (!words[0]) words.shift();
 return words;
+}
+)});
+  return main;
 }
