@@ -3,11 +3,11 @@ export default function define(runtime, observer) {
   const fileAttachments = new Map([["flare-2.json",new URL("./files/e65374209781891f37dea1e7a6e1c5e020a3009b8aedf113b4c80942018887a1176ad4945cf14444603ff91d3da371b3b0d72419fa8d2ee0f6e815732475d5de",import.meta.url)]]);
   main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
   main.variable(observer()).define(["md"], function(md){return(
-md`# test at 8:09 Zoomable Circle Packing
+md`# test at 3:32 Zoomable Circle Packing
 
 Click to zoom in or out.`
 )});
-  main.variable(observer("chart")).define("chart", ["pack","data","d3","width","height","color", "words"], function(pack,data,d3,width,height,color, words)
+  main.variable(observer("chart")).define("chart", ["pack","data","d3","width","height","color", "words", "measureWidth", "lineHeight", "targetWidth", "lines", "textRadius"], function(pack,data,d3,width,height,color, words, measureWidth, lineHeight, targetWidth, lines, textRadius)
 {
   const root = pack(data);
   let focus = root;
@@ -114,5 +114,49 @@ if (!words[0]) words.shift();
 return words;
 }
 )});
+main.variable(observer("measureWidth")).define("measureWidth", function()
+{
+const context = document.createElement("canvas").getContext("2d");
+return text => context.measureText(text).width;
+}
+);
+main.variable(observer("lineHeight")).define("lineHeight", function(){return(
+18
+)});
+main.variable(observer("targetWidth")).define("targetWidth", ["measureWidth","lineHeight"], function(measureWidth,lineHeight){return(
+text => Math.sqrt(measureWidth(text.trim()) * lineHeight)
+)});
+main.variable(observer("lines")).define("lines", ["measureWidth","targetWidth"], function(measureWidth,targetWidth){return(
+function(words) {
+let line;
+let lineWidth0 = Infinity;
+const lines = [];
+for (let i = 0, n = words.length; i < n; ++i) {
+  let lineText1 = (line ? line.text + " " : "") + words[i];
+  let lineWidth1 = measureWidth(lineText1);
+  if ((lineWidth0 + lineWidth1) / 2 < targetWidth(words.join(" ")) ) {
+    line.width = lineWidth0 = lineWidth1;
+    line.text = lineText1;
+  } else {
+    lineWidth0 = measureWidth(words[i]);
+    line = {width: lineWidth0, text: words[i]};
+    lines.push(line);
+  }
+}
+return lines;
+}
+)});
+main.variable(observer("textRadius")).define("textRadius", ["lineHeight"], function(lineHeight){return(
+function(lines) {
+let radius = 0;
+for (let i = 0, n = lines.length; i < n; ++i) {
+  const dy = (Math.abs(i - n / 2 + 0.5) + 0.5) * lineHeight;
+  const dx = lines[i].width / 2;
+  radius = Math.max(radius, Math.sqrt(dx ** 2 + dy ** 2));
+}
+return radius;
+}
+)});
+
   return main;
 }
