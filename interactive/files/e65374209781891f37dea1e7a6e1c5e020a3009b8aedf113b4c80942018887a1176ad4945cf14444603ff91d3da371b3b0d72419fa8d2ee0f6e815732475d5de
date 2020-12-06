@@ -29,10 +29,7 @@
    "name": "Tech-ish terms",
    "children": [
     {"name": "Web scraping", "value": 2822},
-    {"name": "Application Programming Interface (API)", "value": 2822},
-    {"name": "Scholarship of technology enhanced learning", "value": 2822},
-    {"name": "Technology enhanced learning", "value": 2822},
-    {"name": "Post-digital", "value": 2822}
+    {"name": "Application Programming Interface (API)", "value": 2822}
    ]
   },
   {
